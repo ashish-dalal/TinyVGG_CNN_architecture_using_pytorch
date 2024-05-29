@@ -1,6 +1,5 @@
 import torch
 
-from tqdm.auto import tqdm
 from typing import Dict, List, Tuple
 
 def train_step(
@@ -161,7 +160,7 @@ def train(
               "test_loss":[],
               "test_accuracy":[]}
     
-    for epoch in tqdm(range(epochs)):
+    for epoch in range(epochs):
         
         # train step
         train_loss, train_accuracy = train_step(model=model,
@@ -177,7 +176,7 @@ def train(
         
         # Print out what's happening
         print(
-            f"Epoch: {epoch+1} | "
+            f"Epoch: {epoch+1} |\n-------------------------------------------------------------------------------\n"
             f"train_loss: {train_loss:.4f} | "
             f"train_accuracy: {train_accuracy:.4f} | "
             f"test_loss: {test_loss:.4f} | "

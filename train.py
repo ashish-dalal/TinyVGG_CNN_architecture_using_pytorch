@@ -1,15 +1,36 @@
 import os
 import torch
 import data_setup, engine, model_builder, utils
+import argparse
+import pandas as pd
+from pathlib import Path
 
 from torchvision import transforms
 
-NUM_EPOCHS = 5
-BATCH_SIZE = 32
-HIDDEN_UNITS = 10
-LEARNING_RATE = 0.001
+from timeit import default_timer as timer
 
 def main():
+
+    # default values of Hyperparameters
+    NUM_EPOCHS = 5
+    BATCH_SIZE = 32
+    HIDDEN_UNITS = 10
+    LEARNING_RATE = 0.001
+
+    parser = argparse.ArgumentParser(description='To set hyperparameters for the model')
+
+    parser.add_argument('-lr','--learning_rate', type=float, default=LEARNING_RATE, help='learning rate hyperparameter for the optimizer')
+    parser.add_argument('-bz','--batch_size', type=int, default=BATCH_SIZE, help='batch size for model training')
+    parser.add_argument('-hdu','--hidden_units', type=int, default=HIDDEN_UNITS, help='hidden units hyperparameter for the model')
+    parser.add_argument('-eps','--num_epochs', type=int, default=NUM_EPOCHS, help='number of training epochs for the model')
+
+    args = parser.parse_args()
+
+    NUM_EPOCHS = args.num_epochs
+    BATCH_SIZE = args.batch_size
+    HIDDEN_UNITS = args.hidden_units
+    LEARNING_RATE = args.learning_rate
+
     # setup directories
     train_dir = "data/pizza_steak_sushi/train"
     test_dir = "data/pizza_steak_sushi/test"
@@ -52,22 +73,38 @@ def main():
         lr=LEARNING_RATE
     )
 
-    engine.train(
-        model=model,
-        train_dataloader=train_dataloader,
-        test_dataloader=test_dataloader,
-        loss_fn=loss_fn,
-        optimizer=optimizer,
-        epochs=NUM_EPOCHS,
-        device=device 
+    print("model training initiated")
+    
+    start_time = timer()
+    model_results = engine.train(
+                                model=model,
+                                train_dataloader=train_dataloader,
+                                test_dataloader=test_dataloader,
+                                loss_fn=loss_fn,
+                                optimizer=optimizer,
+                                epochs=NUM_EPOCHS,
+                                device=device 
     )
+
+    end_time = timer()
+    total_time = end_time - start_time
+    
+    model_file_name=f"05_TinyVGG_lr_{LEARNING_RATE}_bz_{BATCH_SIZE}_hdu_{HIDDEN_UNITS}_eps_{NUM_EPOCHS}___time_{total_time:.2f}"
 
     # Save the model with utils.py
     utils.save_model(
         model=model,
         target_dir="models",
-        model_name="05_TinyVGG_model_1.pth"
+        model_name=f"{model_file_name}.pth"
     )
+
+    # save results as .csv
+    model_results = pd.DataFrame(model_results)
+    result_dir_path = Path("results")
+    result_save_path = result_dir_path / f"{model_file_name}.csv"
+
+    print(f"[INFO] Saving results to: {model_save_path}")
+    model_results.to_csv(result_save_path)
 
 if __name__ == '__main__':
     main()
