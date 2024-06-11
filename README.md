@@ -1,6 +1,7 @@
 # TinyVGG CNN Architecture using PyTorch
 
-This repository contains the implementation of a TinyVGG Convolutional Neural Network (CNN) architecture using PyTorch. The model is designed for image classification tasks and is trained on a dataset of pizza, steak, and sushi images.
+This repository contains the implementation of the TinyVGG Convolutional Neural Network (CNN) architecture using PyTorch. TinyVGG is a simplified version of the VGGNet model, designed for educational purposes and small-scale image classification tasks. The model is trained on a custom dataset of pizza, steak, and sushi images, demonstrating the effectiveness of deep learning techniques on a small dataset. The project includes data preprocessing scripts, model training code, and evaluation metrics to help users understand and implement CNNs for image classification.
+
 
 ## Table of Contents
 
