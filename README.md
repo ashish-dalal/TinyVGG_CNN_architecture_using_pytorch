@@ -34,6 +34,7 @@ TinyVGG is a lightweight CNN model inspired by VGGNet. It is designed for educat
 
 The dataset used for training and evaluation consists of images of pizza, steak, and sushi. The data is organized in the `data/` directory as follows:
 data/
+
 ├── pizza_steak_sushi/
 
     ├── train/
